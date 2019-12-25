@@ -15,5 +15,11 @@ toDigitsRev n
     | n <= 0 = []
     | otherwise = (mod n 10):toDigits(div n 10)
 
+doubleEveryOther :: [Integer] -> [Integer]
+doubleEveryOther ([]) = []
+doubleEveryOther ([x]) = [x]
+doubleEveryOther ([x, y]) = [x * 2, y]
+doubleEveryOther (rest) = (doubleEveryOther (init (init rest))) ++ [(last (init rest)) * 2] ++ [last rest]
+
 someFunc :: IO ()
-someFunc = print ((toDigits 12345678910) ++ (toDigitsRev 12345678910))
+someFunc = print (doubleEveryOther (toDigits 1234567890))
