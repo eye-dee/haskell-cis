@@ -21,5 +21,12 @@ doubleEveryOther ([x]) = [x]
 doubleEveryOther ([x, y]) = [x * 2, y]
 doubleEveryOther (rest) = (doubleEveryOther (init (init rest))) ++ [(last (init rest)) * 2] ++ [last rest]
 
+sumDigits :: [Integer] -> Integer
+sumDigits [] = 0
+sumDigits (xs:x) = sum (toDigits xs) + sumDigits x
+
 someFunc :: IO ()
-someFunc = print (doubleEveryOther (toDigits 1234567890))
+someFunc = do
+    print (toDigits 1234567890)
+    print (doubleEveryOther (toDigits 1234567890))
+    print (sumDigits (doubleEveryOther (toDigits 1234567890)))
