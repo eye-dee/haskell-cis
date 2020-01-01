@@ -53,6 +53,13 @@ getAge (Person _ a _) = a
 baz :: Person -> String
 baz p@(Person n _ _) = "The name field of (" ++ show p ++ ") is " ++ n
 
+data Tree = Leaf Char
+          | Node Tree Int Tree
+  deriving Show
+
+tree :: Tree
+tree = Node (Leaf 'x') 1 (Node (Leaf 'y') 2 (Leaf 'z'))
+
 dataTypes :: IO ()
 dataTypes = do
     print (listOfThings)
@@ -63,3 +70,4 @@ dataTypes = do
     print stan
     print (getAge stan)
     print (baz stan)
+    print tree

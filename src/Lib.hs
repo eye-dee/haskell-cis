@@ -1,6 +1,7 @@
 module Lib
     ( someFunc
     ) where
+import LogAnalysis
 
 reallyBig :: Integer
 reallyBig = 2^(2^(2^(2^2)))
