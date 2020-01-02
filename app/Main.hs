@@ -5,4 +5,4 @@ import DataTypes
 import LogAnalysisMain
 
 main :: IO ()
-main = logAnalysisRun
+main = logAnalysisBuildTree
