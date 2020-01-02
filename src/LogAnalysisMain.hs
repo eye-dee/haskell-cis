@@ -5,6 +5,13 @@ module LogAnalysisMain
 import LogAnalysis
 import Log
 
+printLogMessages :: [LogMessage] -> IO ()
+printLogMessages [] = do putStr ""
+printLogMessages (x:xs) = do
+    print x
+    printLogMessages xs
+
 logAnalysisRun :: IO ()
 logAnalysisRun = do
-    print (testParse parse 10 "error.log")
+    x <- testParse parse 5524 "error.log"
+    printLogMessages x
