@@ -1,6 +1,6 @@
 module LogAnalysisMain
     (
-    logAnalysisRun, logAnalysisBuildTree
+    logAnalysisRun, logAnalysisBuildTree, logWhatWentWrong
     ) where
 
 import LogAnalysis
@@ -24,3 +24,14 @@ logAnalysisBuildTree :: IO ()
 logAnalysisBuildTree = do
     x <- testParse parse 5423 "error.log"
     print (map logMessageToValue (inOrder (buildLogMessageTree x)))
+
+printMessages :: [String] -> IO ()
+printMessages [] = do putStr ""
+printMessages (x:xs) = do
+    print x
+    printMessages xs
+
+logWhatWentWrong :: IO ()
+logWhatWentWrong = do
+    x <- testParse parse 5423 "error.log"
+    printMessages (whatWentWrong x)

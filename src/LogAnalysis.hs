@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wall #-}
 module LogAnalysis
     (
-        parse, insert, buildLogMessageTree, inOrder
+        parse, insert, buildLogMessageTree, inOrder, whatWentWrong
     ) where
 import Log
 
@@ -40,3 +40,17 @@ buildLogMessageTree (x:xs) = insert x (buildLogMessageTree xs)
 inOrder :: MessageTree -> [LogMessage]
 inOrder Leaf = []
 inOrder (Node left center right) = (inOrder left) ++ center:(inOrder right)
+
+filterError :: LogMessage -> Bool
+filterError (LogMessage (Error _) _ _) = True
+filterError _ = False
+
+filterImportance :: LogMessage -> Bool
+filterImportance (LogMessage (Error x) _ _) = x >= 50
+filterImportance _ = False
+
+mapToMessage :: LogMessage -> String
+mapToMessage (LogMessage _ _ x) = x
+
+whatWentWrong :: [LogMessage] -> [String]
+whatWentWrong x = map mapToMessage (filter filterImportance (filter filterError (inOrder (buildLogMessageTree x))))
