@@ -34,3 +34,4 @@ main = do
     print (fun22 7)
     print (fun2 8)
     print (fun22 8)
+    putStr (prettyTree (foldTree [1,2,3,4,5,6,7,8]))
