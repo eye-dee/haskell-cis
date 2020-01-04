@@ -35,3 +35,21 @@ main = do
     print (fun2 8)
     print (fun22 8)
     putStr (prettyTree (foldTree [1,2,3,4,5,6,7,8]))
+    print (foldTree [1,2,3])
+    print $ fibonacci 1
+    print $ fibonacci 2
+    print $ fibonacci 3
+    print $ fibonacci 4
+    print $ fibonacci 0
+    print $ fibonacci 30
+    print $ fibonacci (-1)
+    print $ fibonacci (-2)
+    print $ fibonacci (-3)
+    print $ fibonacci (-4)
+    print $ fibonacci (-10)
+    print $ seqA 301
+    print $ sum'n'count 301111
+    print $ sum'n'count (-301111)
+    print $ sum'n'count 0
+    print $ integration sin pi 0
+    print $ integration (\x -> 1) 0 10

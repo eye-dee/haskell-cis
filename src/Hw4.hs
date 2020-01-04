@@ -50,3 +50,59 @@ prettyPrint :: (Show a) => (Tree a, Int)-> String
 prettyPrint (Leaf,_) = ""
 prettyPrint ((Node h l x r),z) = prettyPrint(r,z+6) ++ replicate z ' '
                                  ++ show x ++ "_" ++ show h ++ ['\n'] ++ prettyPrint(l,z+6)
+
+fibonacci :: Integer -> Integer
+fibonacci n
+    | n >= 0 = fibonacciInternal 0 1 n
+    | n < 0 = fibonacciInternalNegative 0 1 n
+
+fibonacciInternalNegative :: Integer -> Integer -> Integer -> Integer
+fibonacciInternalNegative a _ 0 = a
+fibonacciInternalNegative _ b (-1) = b
+fibonacciInternalNegative a b n = fibonacciInternalNegative b (a - b) (n + 1)
+
+fibonacciInternal :: Integer -> Integer -> Integer -> Integer
+fibonacciInternal a _ 0 = a
+fibonacciInternal _ b 1 = b
+fibonacciInternal a b n = fibonacciInternal b (b + a) (n - 1)
+
+seqA :: Integer -> Integer
+seqA n = let
+        helper a b c 0 = a
+        helper a b c 1 = b
+        helper a b c 2 = c
+        helper a b c n = helper b c (b + c - 2*a) (n - 1)
+      in helper 1 2 3 n
+
+sum'n'count :: Integer -> (Integer, Integer)
+sum'n'count 0 = (0, 1)
+sum'n'count x = (sum x, count x)
+    where
+        sum 0 = 0
+        sum x
+            | x > 0 = mod x 10 + (sum $ div x 10)
+            | x < 0 = sum (-x)
+        count :: Integer -> Integer
+        count 0 = 0
+        count x
+            | x > 0 = 1 + (count $ div x 10)
+            | x < 0 = count (-x)
+
+
+integration :: (Double -> Double) -> Double -> Double -> Double
+integration f a b
+    | a < b = integrationRun f a b $ step a b
+    | otherwise = integrationRun f a b (-(step b a))
+    where
+        step :: Double -> Double -> Double
+        step a b = (b - a) / 1000.0
+        helper :: (Double -> Double) -> Double -> Double -> Double
+        helper f a b = ((f a) + (f b)) / 2 * (b - a)
+        integrationRun :: (Double -> Double) -> Double -> Double -> Double -> Double
+        integrationRun f a b h
+            | h < 0 && a + h > b = helper f a (a + h) + integrationRun f (a + h) b h
+            | h > 0 && a + h < b = helper f a (a + h) + integrationRun f (a + h) b h
+            | otherwise = helper f a b
+--ghci
+--xor :: [Bool] -> Bool
+--xor = foldr
