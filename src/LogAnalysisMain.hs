@@ -33,5 +33,5 @@ printMessages (x:xs) = do
 
 logWhatWentWrong :: IO ()
 logWhatWentWrong = do
-    x <- testParse parse 5423 "error.log"
+    x <- testParse parse 5523 "error.log"
     printMessages (whatWentWrong x)
