@@ -1,6 +1,7 @@
 module Hw4 where
 
 import Data.Char
+import Data.List
 
 
 fun1 :: [Integer] -> Integer
@@ -226,9 +227,10 @@ squares'n'cubes (x:xs) = x^2 : x^3 : squares'n'cubes xs
 perms :: [a] -> [[a]]
 perms [] = [[]]
 perms [x] = [[x]]
-perms (x:xs) = concatMap (insertElem x) (perms xs) where
-			insertElem x [] = [[x]]
-			insertElem x yss@(y:ys) = (x:yss) : map (y:) (insertElem x ys)
+perms (x:xs) = concatMap (insertElem x) (perms xs)
+    where
+        insertElem x [] = [[x]]
+        insertElem x yss@(y:ys) = (x:yss) : map (y:) (insertElem x ys)
 
 
 isAnyUpper :: String -> Bool
@@ -248,4 +250,114 @@ max3 = zipWith3 max33
 
 data Odd = Odd Integer deriving (Eq,Show)
 instance Enum Odd where
-    toEnum
+    pred (Odd x) = Odd (x - 2)
+    succ (Odd x) = Odd (x + 2)
+    toEnum x = Odd $ toInteger x
+    fromEnum (Odd x) = fromInteger x
+    enumFrom (Odd x) = map (Odd) [x,x+2..]
+    enumFromThen (Odd x) (Odd y) = map (Odd) [x,y..]
+    enumFromTo (Odd x) (Odd y) = map (Odd) [x,x+2..y]
+    enumFromThenTo (Odd x) (Odd y) (Odd z) = map (Odd) [x,y..z]
+
+coins ::(Ord a, Num a) => [a]
+coins = [2,3,7]
+
+change :: (Ord a, Num a) => a -> [[a]]
+change 0 = [[]]
+change amount = [ c:cs | c <- coins, amount >= c, cs <- change (amount - c) ]
+
+sumOdd :: [Integer] -> Integer
+sumOdd = foldr f 0
+    where
+        f x y
+            | mod x 2 == 1 = x + y
+            | otherwise = y
+
+meanList :: [Double] -> Double
+meanList = uncurry (\x y -> x / y) . foldr (\x (f,s) -> (x + f, s + 1)) (0,0)
+--
+--evenOnly :: [a] -> [a]
+--evenOnly x = fst (foldr fold ([], (length x)) x)
+--    where
+--        fold :: a -> ([a], Int) -> ([a], Int)
+--        fold x (xs, i)
+--            | (mod i 2) == 0 = (x:xs, i - 1)
+--            | otherwise = (xs, i - 1)
+
+evenOnly :: [a] -> [a]
+evenOnly x = evens x 1
+    where
+        evens [] _ = []
+        evens (x:xs) i
+            | even i = x : evens xs (i + 1)
+            | otherwise = evens xs (i + 1)
+
+--evenOnly :: [a] -> [a]
+--evenOnly = fst . foldl fold ([], 1)
+--    where
+--        fold :: ([a], Int) -> a -> ([a], Int)
+--        fold (xs, i) x
+--            | (mod i 2) == 0 = ((seq xs (xs ++ [x])), i + 1)
+--            | otherwise = (xs, i + 1)
+
+
+revRange :: (Char,Char) -> [Char]
+revRange = unfoldr g
+  where
+    g :: (Char, Char) -> Maybe (Char, (Char, Char))
+    g (p1, p2)
+        | p1 <= p2 = Just (p2, (p1, (pred p2)))
+        | otherwise = Nothing
+
+data Bit = Zero | One deriving (Show)
+data Sign = Minus | Plus deriving (Show)
+data Z = Z Sign [Bit] deriving (Show)
+
+bitToInt :: Z -> Int
+bitToInt (Z y x) =  (sign y) * (fst (foldl (\(sum, mul) x -> (sum + x*mul, mul*2)) (0, 1) (map toBit x)))
+
+intToBit :: Int -> Z
+intToBit x = Z (signn (signum x)) (unfoldr ops (abs x))
+    where
+        ops x
+            | x == 0 = Nothing
+            | mod x 2 == 0 = Just (Zero, (div x 2))
+            | otherwise = Just (One, (div x 2))
+
+add :: Z -> Z -> Z
+add x y = intToBit ((bitToInt x) + (bitToInt y))
+
+toBit :: Bit -> Int
+toBit Zero = 0
+toBit One = 1
+
+sign Minus = (-1)
+sign Plus = 1
+signn (-1) = Minus
+signn 1 = Plus
+signn 0 = Plus
+
+mul :: Z -> Z -> Z
+mul x y = intToBit ((bitToInt x) * (bitToInt y))
+
+
+fooo 0 = undefined
+fooo x = x : fooo (x - 1)
+
+
+data Error = ParsingError | IncompleteDataError | IncorrectDataError String deriving Show
+
+data Person = Person { firstName :: String, lastName :: String, age :: Int } deriving Show
+
+parsePerson :: String -> Either Error Person
+parsePerson x = parsePersonFromList (words $ filter (/=' ') x)
+
+parsePersonFromList :: [String] -> Either Error Person
+parsePersonFromList l@(x:y:z:xs)
+    | not (all isDigit $ dropWhileEqual z) = Left (IncorrectDataError $ dropWhileEqual z)
+    | any (\x -> (find (\y -> y == '=') x) == Nothing) l = Left ParsingError
+    | otherwise = Right Person
+        {firstName = dropWhileEqual x, lastName = dropWhileEqual y, age = read (dropWhileEqual z):: Int}
+parsePersonFromList _ = Left IncompleteDataError
+
+dropWhileEqual = tail . dropWhile (/='=')

@@ -4,23 +4,14 @@ import Lib
 import DataTypes
 import LogAnalysisMain
 import Golf
-import Hw4
+import Hw5
 
 main :: IO ()
 main = do
     print $ skips "hello!hello!hello!hello!hello!hello!hello!hello!"
-    print $ oddsOnly [2,5,7,10,11,12]
-    print $ isPalindrome [1, 2, 3]
-    print $ isPalindrome "ABCBA"
-    print $ sum3 [1,2,3] [4,5] [6]
-    print $ groupElems ([]::[Int])
-    print $ groupElems [1,2]
-    print $ groupElems [1,2,2,2,4]
-    print $ groupElems [1,2,3,2,4]
-    print $ qsort [1,3,2,5]
-    print $ qsort [1,3,2,5,1, -1, -1, 1231,1231,231,241,342,34,345,345,34,2,353,454,23,3,312,53,323,5]
-    print $ delAllUpper "Abc IS not ABC"
-    print $ max3 [7,2,9] [3,6,8] [1,8,10]
+    print $ fromNat $ add (Suc (Suc (Suc (Suc Zero)))) (Suc (Suc Zero))
+    print $ fromNat $ mul (Suc (Suc (Suc (Suc Zero)))) (Suc (Suc (Suc (Suc (Suc Zero)))))
+    print $ fromNat $ fac (Suc (Suc (Suc (Suc (Suc (Suc (Suc (Suc (Suc Zero)))))))))
 --    print $ skips "1234567123456712345671234567123456712345671234567123456712345671234567"
 --    print $ skips "123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567"
 --    print $ skips "12345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567123456712345671234567"
