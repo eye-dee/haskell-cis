@@ -2,6 +2,7 @@ module Hw7 where
 
 import Prelude hiding (lookup)
 import qualified Data.List as L
+import Data.Char
 
 class MapLike m where
     empty :: m k v
@@ -59,3 +60,34 @@ execLoggers :: a -> (a -> Log b) -> (b -> Log c) -> Log c
 execLoggers x f g = Log ((msg (f x)) ++ (msg (g (val (f x))))) (val (g (val (f x)))) where
     msg (Log x _) = x
     val (Log _ x) = x
+
+bindLog :: Log a -> (a -> Log b) -> Log b
+bindLog (Log prev a) f =
+    let (Log next b) = f a
+    in Log (prev ++ next) b
+
+data Token = Number Int | Plus | Minus | LeftBrace | RightBrace
+    deriving (Eq, Show)
+
+asToken :: String -> Maybe Token
+asToken str
+  | all isDigit str = Just $ Number $ read str
+  | str == "+" = Just Plus
+  | str == "-" = Just Minus
+  | str == ")" = Just RightBrace
+  | str == "(" = Just LeftBrace
+  | otherwise  = Nothing
+
+tokenize :: String -> Maybe [Token]
+tokenize = sequence . map asToken . words
+
+
+pythagoreanTriple :: Int -> [(Int, Int, Int)]
+pythagoreanTriple x = do
+    a <- [1..x]
+    b <- [1..x]
+    c <- [1..x]
+    if a < b then "1" else []
+    if b < c then "1" else []
+    if (a^2) + (b^2) == (c^2) then "1" else []
+    return (a,b,c)
